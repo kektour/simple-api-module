@@ -9,7 +9,7 @@ export class UserServiceImpl implements UserService {
       throw new Error('Filter object should has one or more attributes');
     }
 
-    return this._userDal.find(filter);
+    return this._userDal.findUser(filter);
   }
 
   public createUser(payload: UserServiceCreateUserPayload): Promise<UserServiceCreatedUser> {
@@ -17,10 +17,10 @@ export class UserServiceImpl implements UserService {
       throw new Error('User object should has one or more attributes');
     }
 
-    return this._userDal.create(payload);
+    return this._userDal.createUser(payload);
   }
 
   public deleteUser(id: number): Promise<void> {
-    return this._userDal.delete(id);
+    return this._userDal.deleteUser(id);
   }
 }

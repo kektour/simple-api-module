@@ -1,4 +1,12 @@
-export interface UserDalRawUser {
+export interface UserDalFindFilter {
+  name?: string;
+  username?: string;
+  email?: string;
+  phone?: string;
+  website?: string;
+}
+
+export interface UserDalFoundRawUser {
   id: number;
   name: string;
   username: string;
@@ -22,7 +30,7 @@ export interface UserDalRawUser {
   };
 }
 
-export interface UserDalUser {
+export interface UserDalFoundMappedUser {
   name: string;
   surname: string;
   email: string;
@@ -34,14 +42,6 @@ export interface UserDalUser {
   registeredService: string;
   companyName: string;
   dateRequest: string;
-}
-
-export interface UserDalFindFilter {
-  name?: string;
-  username?: string;
-  email?: string;
-  phone?: string;
-  website?: string;
 }
 
 export interface UserDalCreateUserPayload {
@@ -57,7 +57,7 @@ export interface UserDalCreatedUser extends UserDalCreateUserPayload {
 }
 
 export interface UserDal {
-  find(filter?: UserDalFindFilter): Promise<Array<UserDalUser>>;
-  create(userPayload: UserDalCreateUserPayload): Promise<UserDalCreatedUser>;
-  delete(id: number): Promise<void>;
+  findUser(filter?: UserDalFindFilter): Promise<Array<UserDalFoundMappedUser>>;
+  createUser(payload: UserDalCreateUserPayload): Promise<UserDalCreatedUser>;
+  deleteUser(id: number): Promise<void>;
 }

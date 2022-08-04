@@ -5,11 +5,10 @@ import { ApiRequest } from './apiRequest';
 
 export class ApiRequestImpl implements ApiRequest {
   public get<T extends Record<string, any>>(urlStr: string, qc?: Record<string, string>): Promise<T> {
-    const url = this._mapUrlToObj(urlStr, qc);
-    const httpModule = url.isHTPPS ? https : http;
+    const { module, ...url } = this._prepareRequest(urlStr, qc);
 
     return new Promise((resolve, reject) => {
-      const req = httpModule.request(
+      const req = module.request(
         {
           hostname: url.hostname,
           path: url.path,
@@ -45,11 +44,10 @@ export class ApiRequestImpl implements ApiRequest {
   }
 
   public post<T extends Record<string, any>>(urlStr: string, body: any): Promise<T> {
-    const url = this._mapUrlToObj(urlStr);
-    const httpModule = url.isHTPPS ? https : http;
+    const { module, ...url } = this._prepareRequest(urlStr);
 
     return new Promise((resolve, reject) => {
-      const req = httpModule.request(
+      const req = module.request(
         {
           hostname: url.hostname,
           path: url.path,
@@ -87,11 +85,10 @@ export class ApiRequestImpl implements ApiRequest {
   }
 
   public delete(urlStr: string): Promise<void> {
-    const url = this._mapUrlToObj(urlStr);
-    const httpModule = url.isHTPPS ? https : http;
+    const { module, ...url } = this._prepareRequest(urlStr);
 
     return new Promise((resolve, reject) => {
-      const req = httpModule.request({ hostname: url.hostname, path: url.path, method: 'DELETE' }, (res) => {
+      const req = module.request({ hostname: url.hostname, path: url.path, method: 'DELETE' }, (res) => {
         res.on('error', reject);
 
         res.on('end', resolve);
@@ -103,7 +100,7 @@ export class ApiRequestImpl implements ApiRequest {
     });
   }
 
-  private _mapUrlToObj(urlStr: string, qc?: Record<string, string>) {
+  private _prepareRequest(urlStr: string, qc?: Record<string, string>) {
     const url = new URL(urlStr);
 
     if (qc) {
@@ -115,7 +112,7 @@ export class ApiRequestImpl implements ApiRequest {
     return {
       hostname: url.hostname,
       path: url.pathname + url.search,
-      isHTPPS: url.protocol === 'https:',
+      module: url.protocol === 'https:' ? https : http,
     };
   }
 }
