@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --legacy-watch src/index.ts"
+    "start": "nodemon --legacy-watch src/index.ts",
+    "test": "jest --watch"
   },
   "repository": {
     "type": "git",
